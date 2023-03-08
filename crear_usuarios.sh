@@ -1,4 +1,21 @@
 #!/bin/bash
+
+#Para facilitar las pruebas, aseguramos de que esten borrados los usuarios. 
+userdel -r alum1
+userdel -r alum2
+userdel -r alum3
+userdel -r alum4
+userdel -r alum5
+
+rm -Rf /home/alum1
+rm -Rf /home/alum2
+rm -Rf /home/alum3
+rm -Rf /home/alum4
+rm -Rf /home/alum5
+
+#============================================================================
+
+
 if [[ $# = 0 || ! -f $1 ]]; then
 	echo "Se necesita un fichero valido con usuarios"
 	exit
@@ -7,7 +24,6 @@ fi
 uid_alumnos=1100
 uid_usuarios=1400
 IFS=$'\n' #El separador de campos es el caracter de final de linea
-
 
 
 for linea in $(cat $1)
@@ -65,8 +81,27 @@ do
 	
 	#grupo secundario
 	usermod -a -G "$grupoSec" "$nombre"
-	
-	#Visualizamos el contenido de etc/groups para ver si los grupos secundarios se han asignado correctamente	
-	
-
 done
+
+#Visualizamos el contenido de etc/groups para ver si los grupos secundarios se han asignado correctamente	
+echo -e "\n\n\n\n\n\n"
+echo -e "*** Verificamos contenido del etc/group: ***"
+echo "==========================================="
+echo -e "$(cat /etc/group | tail -n 5)\n"
+
+
+#Visualizamos las 5 ultimas entradas del etc/shadow para verificar si se ha establecido una contraseña cifrada.
+echo -e "\n"
+echo -e "*** Verificamos contenido del etc/shadow: ***"
+echo "==========================================="
+echo -e "$(cat /etc/shadow | tail -n 5)\n"
+
+
+#Visualizamos las 5 ultimas entradas del etc/passwd
+echo -e "\n"
+echo -e "*** Verificamos contenido del etc/passwd: ***"
+echo "==========================================="
+echo -e "$(cat /etc/passwd | tail -n 5)\n"
+
+
+
